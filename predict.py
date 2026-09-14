@@ -1,5 +1,6 @@
-import requests
 import random
+
+import requests
 from sklearn.datasets import load_breast_cancer
 
 API_URL = "http://127.0.0.1:8000/predict"

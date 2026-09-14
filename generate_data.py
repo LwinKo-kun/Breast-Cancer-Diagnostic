@@ -2,8 +2,10 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from project_paths import MODEL_PATH, get_data_path
+
 # 1. Load training data to establish distribution baselines and verify non-existence
-artifact = joblib.load("model.joblib")
+artifact = joblib.load(MODEL_PATH)
 pipeline = artifact["pipeline"]
 feature_names = artifact["feature_names"]
 scaler = pipeline.named_steps["scaler"]
@@ -37,10 +39,10 @@ while len(novel_samples) < num_samples_to_generate:
 df_novel = pd.DataFrame(novel_samples, columns=feature_names)
 df_novel = df_novel.round(4)
 
-csv_filename = "unlabeled_synthetic_data.csv"
-df_novel.to_csv(csv_filename, index=False)
+csv_path = get_data_path("unlabeled_synthetic_data.csv")
+df_novel.to_csv(csv_path, index=False)
 
 print(f"Successfully created {num_samples_to_generate} unique, unseen feature records.")
-print(f"Exported to '{csv_filename}' with {len(feature_names)} features and 0 predictions.\n")
+print(f"Exported to '{csv_path}' with {len(feature_names)} features and 0 predictions.\n")
 print("Preview (First 5 records, first 5 columns):")
 print(df_novel.iloc[:5, :5])

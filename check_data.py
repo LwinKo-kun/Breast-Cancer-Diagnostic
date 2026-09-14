@@ -3,8 +3,10 @@ import numpy as np
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 
+from project_paths import MODEL_PATH
+
 # 1. Load memorized training instances from the model artifact
-artifact = joblib.load("model.joblib")
+artifact = joblib.load(MODEL_PATH)
 pipeline = artifact["pipeline"]
 scaler = pipeline.named_steps["scaler"]
 knn = pipeline.named_steps["knn"]

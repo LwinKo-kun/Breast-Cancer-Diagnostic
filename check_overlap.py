@@ -1,7 +1,10 @@
 import sys
+
 import joblib
 import numpy as np
 import pandas as pd
+
+from project_paths import MODEL_PATH
 
 # 1. Target file to check
 TARGET_CSV = "unlabeled_synthetic_data.csv"
@@ -9,7 +12,7 @@ if len(sys.argv) > 1:
     TARGET_CSV = sys.argv[1]
 
 # 2. Extract memorized training instances from the model bundle
-artifact = joblib.load("model.joblib")
+artifact = joblib.load(MODEL_PATH)
 pipeline = artifact["pipeline"]
 scaler = pipeline.named_steps["scaler"]
 knn = pipeline.named_steps["knn"]

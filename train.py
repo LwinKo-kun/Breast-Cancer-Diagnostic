@@ -1,4 +1,6 @@
 import sys
+from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -8,6 +10,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+
+from project_paths import MODEL_PATH
 
 def get_requested_sample_size(max_available: int) -> int:
     """Reads sample size from command-line argument or interactive prompt."""
@@ -95,8 +99,8 @@ def main():
         'best_params': grid_search.best_params_,
         'train_samples_count': int(X_train.shape[0])
     }
-    joblib.dump(artifact, 'model.joblib')
-    print(f"\nSuccess: Exported model with exactly {train_count} memorized instances.")
+    joblib.dump(artifact, MODEL_PATH)
+    print(f"\nSuccess: Exported model with exactly {train_count} memorized instances to {MODEL_PATH}.")
 
 if __name__ == '__main__':
     main()

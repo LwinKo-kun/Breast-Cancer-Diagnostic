@@ -1,8 +1,10 @@
 import joblib
 import pandas as pd
 
+from project_paths import MODEL_PATH
+
 # 1. Load the artifact
-artifact = joblib.load("model.joblib")
+artifact = joblib.load(MODEL_PATH)
 pipeline = artifact["pipeline"]
 feature_names = artifact["feature_names"]
 target_names = artifact["target_names"]

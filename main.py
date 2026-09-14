@@ -1,9 +1,12 @@
 from contextlib import asynccontextmanager
 from typing import List, Dict, Any
+
 import joblib
 import numpy as np
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
+
+from project_paths import MODEL_PATH
 
 # Global reference container for the loaded artifact
 ml_context: Dict[str, Any] = {}
@@ -12,14 +15,14 @@ ml_context: Dict[str, Any] = {}
 async def lifespan(app: FastAPI):
     # Load artifact once when the server starts up
     try:
-        artifact = joblib.load("model.joblib")
+        artifact = joblib.load(MODEL_PATH)
         ml_context["pipeline"] = artifact["pipeline"]
         ml_context["feature_names"] = artifact["feature_names"]
         ml_context["target_names"] = artifact["target_names"]
         ml_context["best_params"] = artifact.get("best_params", {})
-        print(f"Loaded model.joblib successfully. Target classes: {ml_context['target_names']}")
+        print(f"Loaded {MODEL_PATH.name} successfully. Target classes: {ml_context['target_names']}")
     except FileNotFoundError:
-        raise RuntimeError("model.joblib not found. Run 'python train.py' first.")
+        raise RuntimeError(f"{MODEL_PATH.name} not found. Run 'python train.py' first.")
     
     yield
     
