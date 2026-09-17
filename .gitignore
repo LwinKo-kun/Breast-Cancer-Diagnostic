@@ -1,8 +1,20 @@
-cat << 'EOF' > .gitignore
-.venv/
+# Bytecode and runtime artifacts
 __pycache__/
-*.pyc
-*.csv
-*.joblib
-*.png
-EOF
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Environment variables & local IDE
+.env
+.vscode/
+.idea/
+
+# Large generated outputs (keep code reproducible)
+models/*.joblib
+reports/figures/*.png
+data/processed/*.csv
