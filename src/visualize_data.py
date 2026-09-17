@@ -1,3 +1,4 @@
+from pathlib import Path
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 from src.project_paths import MODEL_PATH, get_figure_path
 
-# Aesthetic styling (system-agnostic sans-serif font)
+# Aesthetic styling
 sns.set_theme(style="whitegrid", palette="muted")
 plt.rcParams["font.family"] = "sans-serif"
 
@@ -42,7 +43,7 @@ def load_artifact():
     )
 
 
-def plot_feature_distributions():
+def plot_feature_distributions(show: bool = True):
     """Generates boxplots of key discriminating diagnostic features."""
     data = load_breast_cancer()
     df = pd.DataFrame(data.data, columns=data.feature_names)
@@ -69,22 +70,28 @@ def plot_feature_distributions():
             data=df,
             x="diagnosis",
             y=feat,
+            hue="diagnosis",
+            legend=False,
             ax=ax,
             palette={"MALIGNANT": "#e63946", "BENIGN": "#2a9d8f"},
         )
-        # Using standard 'bold' avoids missing font weight warnings on Linux
         ax.set_title(feat.title(), fontsize=11, fontweight="bold")
         ax.set_xlabel("")
         ax.set_ylabel("")
 
     plt.tight_layout()
-    out_path = get_figure_path("feature_distributions.png")
+    out_path = Path(get_figure_path("feature_distributions.png"))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    
     plt.savefig(out_path, dpi=300, bbox_inches="tight")
-    plt.close()
-    print(f"Saved feature boxplots to '{out_path}'")
+    print(f"[+] Saved feature boxplots to: {out_path.resolve()}")
+
+    if show:
+        plt.show()
+    plt.close(fig)
 
 
-def plot_pca_decision_space():
+def plot_pca_decision_space(show: bool = True):
     """Reduces 30D feature space to 2D PCA space and visualizes clusters & nearest neighbors."""
     (
         pipeline,
@@ -96,12 +103,10 @@ def plot_pca_decision_space():
         _,
     ) = load_artifact()
 
-    # 1. Fit PCA on the scaled training instances
     pca = PCA(n_components=2, random_state=42)
     X_train_pca = pca.fit_transform(X_train_scaled)
     var_ratio = pca.explained_variance_ratio_ * 100
 
-    # 2. Extract holdout test samples
     raw_data = load_breast_cancer()
     _, X_test_raw, _, y_test = train_test_split(
         raw_data.data,
@@ -119,8 +124,7 @@ def plot_pca_decision_space():
     X_test_pca = pca.transform(X_test_scaled)
     distances, neighbor_indices = knn.kneighbors(X_test_scaled)
 
-    # 3. Create PCA Decision Space Plot
-    plt.figure(figsize=(11, 7))
+    fig = plt.figure(figsize=(11, 7))
     colors = {"malignant": "#e63946", "benign": "#2a9d8f"}
 
     for class_idx, label in enumerate(target_names):
@@ -167,17 +171,22 @@ def plot_pca_decision_space():
     plt.legend(frameon=True, loc="upper right")
     plt.tight_layout()
 
-    out_path = get_figure_path("knn_pca_decision_space.png")
+    out_path = Path(get_figure_path("knn_pca_decision_space.png"))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    
     plt.savefig(out_path, dpi=300, bbox_inches="tight")
-    plt.close()
-    print(f"Saved PCA cluster map to '{out_path}'")
+    print(f"[+] Saved PCA cluster map to: {out_path.resolve()}")
+
+    if show:
+        plt.show()
+    plt.close(fig)
 
 
 def main():
     print("Generating biological & dimensional visualizations...")
-    plot_feature_distributions()
-    plot_pca_decision_space()
-    print("\nVisualizations complete. Output saved under 'reports/figures/'.")
+    plot_feature_distributions(show=True)
+    plot_pca_decision_space(show=True)
+    print("\nVisualizations complete.")
 
 
 if __name__ == "__main__":

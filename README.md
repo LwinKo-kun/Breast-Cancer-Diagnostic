@@ -1,189 +1,408 @@
-# Breast Cancer Diagnostic Classifier
+# 🎗️ Breast Cancer Diagnostic
 
-A compact machine learning project that trains a K-Nearest Neighbors (KNN) classifier on the scikit-learn breast cancer dataset and exposes it through a FastAPI inference service.
+A machine learning project that uses the **K-Nearest Neighbors (KNN)** algorithm to classify breast cancer tumors as benign or malignant.
 
-This repository is intended for learning, experimentation, and lightweight model inspection. It includes training, API serving, validation, and synthetic-data checks.
+The project includes model training, data generation, visualization, prediction, a FastAPI application, and automated tests.
 
-## Project goal
+> **Status:** Educational / Experimental  
+> **Important:** This project is not a medical diagnostic tool and must not be used for real medical decisions.
 
-The project demonstrates:
+---
 
-- training a tabular ML model on the breast cancer dataset
-- tuning KNN hyperparameters with grid search
-- serializing the trained pipeline to a model artifact
-- serving predictions via a FastAPI API
-- checking model/data overlap and verifying behavior on unseen data
+## 📌 Overview
 
-## Tech stack
+This project demonstrates how machine learning can be used to classify breast cancer data.
 
-- Python 3
-- scikit-learn
-- FastAPI
-- Uvicorn
-- NumPy
-- Pandas
-- Joblib
-- Requests
+The system provides:
 
-## Repository contents
+- KNN model training
+- Breast cancer dataset processing
+- Synthetic data generation
+- Data visualization
+- Model-based predictions
+- FastAPI application
+- Prediction history storage
+- Automated testing
 
-- `train.py` — trains the model and saves `model.joblib`
-- `main.py` — FastAPI app and prediction endpoint
-- `predict.py` — simple CLI client for testing the API
-- `generate_data.py` — creates synthetic novel samples
-- `check_data.py` — checks for duplicates against training data
-- `check_overlap.py` — validates generated rows against training data
-- `inspect_data.py` — inspects the memorized training examples
-- `test_api.py` — performs a live API accuracy benchmark
-- `project_paths.py` — centralizes project-root paths to avoid running errors from different directories
-- `model.joblib` — trained model artifact
+---
 
-## Setup
+## 🛠️ Technologies
 
-Create and activate the project virtual environment:
+| Technology | Purpose |
+|---|---|
+| Python | Main programming language |
+| Scikit-learn | Machine learning |
+| FastAPI | API development |
+| Uvicorn | API server |
+| NumPy | Numerical computation |
+| Pandas | Data processing |
+| Joblib | Model saving and loading |
+| Matplotlib | Data visualization |
+| Pytest | Automated testing |
 
-```bash
-cd /home/lwin-ko/Repo/breast_cancer
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+---
+
+## 📂 Project Structure
+
+```text
+Breast-Cancer-Diagnostic/
+│
+├── app.py
+├── main.py
+├── requirements.txt
+├── README.md
+│
+├── data/
+│   └── processed/
+│       ├── prediction_history.csv
+│       └── unlabeled_synthetic_data.csv
+│
+├── models/
+│   └── model.joblib
+│
+├── reports/
+│   └── figures/
+│       ├── feature_distributions.png
+│       └── knn_pca_decision_space.png
+│
+├── src/
+│   ├── __init__.py
+│   ├── project_paths.py
+│   ├── train.py
+│   ├── predict.py
+│   ├── generate_data.py
+│   └── visualize_data.py
+│
+└── tests/
+    ├── __init__.py
+    ├── test_api.py
+    ├── test_data_integrity.py
+    └── test_project_paths.py
 ```
 
-## Train the model
+### Main Files
+
+| File | Description |
+|---|---|
+| `app.py` | Application entry point |
+| `main.py` | Main application/API implementation |
+| `requirements.txt` | Python dependencies |
+| `src/train.py` | Trains the KNN model |
+| `src/predict.py` | Makes predictions using the trained model |
+| `src/generate_data.py` | Generates synthetic data |
+| `src/visualize_data.py` | Creates data visualizations |
+| `src/project_paths.py` | Defines project file paths |
+| `models/model.joblib` | Saved machine learning model |
+
+---
+
+## 🧠 Machine Learning Model
+
+The project uses the **K-Nearest Neighbors (KNN)** classification algorithm.
+
+KNN predicts the class of a new sample by comparing it with nearby samples in the training dataset.
+
+### Classification Classes
+
+The model classifies tumors into:
+
+- **Benign**
+- **Malignant**
+
+### Input Features
+
+The Breast Cancer Wisconsin Diagnostic dataset contains **30 numerical features** describing characteristics of cell nuclei.
+
+These features are used by the model to make predictions.
+
+---
+
+## 📊 Dataset
+
+The project uses the Breast Cancer Wisconsin Diagnostic dataset available through `scikit-learn`.
+
+The dataset contains numerical measurements extracted from breast tissue samples.
+
+The data is used for:
+
+- Model training
+- Model evaluation
+- Prediction experiments
+- Visualization
+- Synthetic data generation
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/LwinKo-kun/Breast-Cancer-Diagnostic.git
+cd Breast-Cancer-Diagnostic
+```
+
+### 2. Create a Virtual Environment
+
+Linux/macOS:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🏋️ Train the Model
+
+Run the training script:
+
+```bash
+python -m src.train
+```
+
+The training process prepares the dataset and trains the KNN classification model.
+
+The trained model is stored in:
+
+```text
+models/model.joblib
+```
+
+> Check `src/train.py` for the available training options and parameters.
+
+---
+
+## 🧪 Generate Synthetic Data
+
+The project includes a script for generating synthetic data.
 
 Run:
 
 ```bash
-python train.py 30
+python -m src.generate_data
 ```
 
-This trains on 30 examples, evaluates on a held-out set, tunes KNN parameters, and saves:
+Generated data is stored in:
+
+```text
+data/processed/unlabeled_synthetic_data.csv
+```
+
+Synthetic data is intended for experimentation and testing. It should not be treated as real patient data.
+
+---
+
+## 📈 Visualize the Dataset
+
+Generate visualizations using:
 
 ```bash
+python -m src.visualize_data
+```
+
+The generated figures are stored in:
+
+```text
+reports/figures/
+```
+
+### Available Visualizations
+
+#### Feature Distributions
+
+```text
+reports/figures/feature_distributions.png
+```
+
+This figure shows the distribution of selected dataset features.
+
+#### KNN PCA Decision Space
+
+```text
+reports/figures/knn_pca_decision_space.png
+```
+
+This figure visualizes the KNN classification space after applying Principal Component Analysis (PCA).
+
+---
+
+## 🚀 Run the Application
+
+The project includes a Python application and API implementation.
+
+Start the application according to the entry point defined in `app.py` and `main.py`.
+
+For a FastAPI application, the server can typically be started using:
+
+```bash
+uvicorn main:app --reload
+```
+
+The API is then available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+Interactive API documentation, if enabled, is available at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+> The exact startup command depends on how the application is configured. Check `app.py` and `main.py` for the available entry points.
+
+---
+
+## 🔍 Prediction
+
+The project includes a prediction script:
+
+```bash
+python -m src.predict
+```
+
+The prediction module uses the trained model to classify input data.
+
+The saved model is loaded from:
+
+```text
+models/model.joblib
+```
+
+Prediction results may be recorded in:
+
+```text
+data/processed/prediction_history.csv
+```
+
+---
+
+## 🧪 Testing
+
+The project uses **Pytest** for automated testing.
+
+Run all tests:
+
+```bash
+pytest
+```
+
+### Test Files
+
+| File | Purpose |
+|---|---|
+| `tests/test_api.py` | Tests API functionality |
+| `tests/test_data_integrity.py` | Checks data integrity |
+| `tests/test_project_paths.py` | Tests project path configuration |
+
+You can also run a specific test file:
+
+```bash
+pytest tests/test_api.py
+```
+
+---
+
+## 🔄 Project Workflow
+
+```text
+Breast Cancer Dataset
+        │
+        ▼
+Data Preparation
+        │
+        ▼
+KNN Model Training
+        │
+        ▼
+Model Evaluation
+        │
+        ▼
 model.joblib
+        │
+        ▼
+Prediction Module
+        │
+        ▼
+FastAPI Application
+        │
+        ▼
+Prediction Results
+        │
+        ▼
+Prediction History
 ```
 
-The script prints the selected hyperparameters and evaluation metrics such as macro F1 and ROC-AUC.
+---
 
-## Run the API
+## 📁 Generated Files
 
-Start the server:
+| File | Description |
+|---|---|
+| `models/model.joblib` | Trained machine learning model |
+| `data/processed/unlabeled_synthetic_data.csv` | Generated synthetic data |
+| `data/processed/prediction_history.csv` | Prediction history |
+| `reports/figures/feature_distributions.png` | Feature distribution visualization |
+| `reports/figures/knn_pca_decision_space.png` | PCA decision-space visualization |
 
-```bash
-uvicorn main:app --host 127.0.0.1 --port 8000 --reload
-```
+---
 
-The app will automatically load the model artifact on startup.
+## ⚠️ Limitations
 
-## API endpoints
+- This project is intended for learning and experimentation.
+- The model is not clinically validated.
+- Predictions are not medical diagnoses.
+- Synthetic data does not represent real patient records.
+- Model performance depends on the dataset and training process.
+- The application should not be used to make medical decisions.
 
-### Health
+---
 
-```bash
-curl http://127.0.0.1:8000/health
-```
+## 🎯 Learning Objectives
 
-Response example:
+This project helps demonstrate:
 
-```json
-{
-  "status": "healthy",
-  "model_loaded": true,
-  "features_expected": 30
-}
-```
+- Machine learning classification
+- KNN algorithms
+- Dataset processing
+- Synthetic data generation
+- Data visualization
+- Model serialization
+- FastAPI development
+- Automated testing
+- Python project organization
 
-### Predict
+---
 
-```bash
-curl -X POST http://127.0.0.1:8000/predict \
-  -H "Content-Type: application/json" \
-  -d '{"features":[13.54,14.36,87.46,566.3,0.09779,0.08129,0.06664,0.04781,0.1885,0.05766,0.2699,0.7886,2.058,23.56,0.008462,0.0146,0.02387,0.01315,0.0198,0.0023,15.11,19.26,99.7,711.2,0.144,0.1773,0.239,0.1288,0.2977,0.07259]}'
-```
+## 👨‍💻 Author
 
-Response includes:
+**Lwin Ko**
 
-- prediction
-- prediction_code
-- confidence_pct
-- class_probabilities
-- nearest_neighbors_distances
+GitHub:  
+https://github.com/LwinKo-kun
 
-## Test from the CLI
+Repository:  
+https://github.com/LwinKo-kun/Breast-Cancer-Diagnostic
 
-Run the interactive client:
+---
 
-```bash
-python predict.py
-```
+## 📄 License
 
-It offers two choices:
+No license has been specified in the repository.
 
-1. random patient from the dataset
-2. custom feature vector
-
-## Validate the model and data
-
-You can run the helper scripts:
-
-```bash
-python check_data.py
-python check_overlap.py
-python inspect_data.py
-python test_api.py
-```
-
-These scripts help confirm:
-
-- no immediate overlap between training and holdout samples
-- generated synthetic data is sufficiently distinct
-- the API performs reasonably on unseen examples
-
-## Notes and caveats
-
-This project is intentionally educational and experimental.
-
-Important points:
-
-- The model is based on KNN, which memorizes training samples.
-- The project uses a deliberately small training subset for experimentation.
-- The API expects exactly 30 feature values in the same order as the dataset.
-- The app depends on the model artifact existing before API startup.
-- The project uses project-root-aware file handling so it works reliably regardless of where it is launched.
-
-## Typical workflow
-
-```bash
-cd /home/lwin-ko/Repo/breast_cancer
-source .venv/bin/activate
-python train.py 30
-uvicorn main:app --host 127.0.0.1 --port 8000 --reload
-```
-
-Then open:
-
-- http://127.0.0.1:8000/docs
-- http://127.0.0.1:8000/health
-
-## Troubleshooting
-
-If the app fails to start:
-
-```bash
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python train.py 30
-```
-
-If the model is missing:
-
-```bash
-python train.py 30
-```
-
-If you run scripts from outside the project directory, the project-root path fix should prevent common file-not-found issues.
-
-## License
-
-This project is intended for educational and experimental use.
+If you plan to distribute or reuse this project, consider adding an appropriate open-source license.

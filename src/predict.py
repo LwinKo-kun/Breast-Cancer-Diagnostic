@@ -10,8 +10,18 @@ def get_prediction(features: list, true_label: str = None):
         res = requests.post(API_URL, json={"features": features})
         if res.status_code == 200:
             data = res.json()
-            print(f"\nAPI Prediction: {data['prediction'].upper()}")
-            print(f"Confidence: {data['confidence_pct']}%")
+            pred = data["prediction"].upper()
+            conf = float(data["confidence_pct"])
+
+            # Derive individual class probabilities
+            malignant_pct = conf if pred == "MALIGNANT" else (100.0 - conf)
+            benign_pct = 100.0 - malignant_pct
+
+            print(f"\nAPI Prediction: {pred}")
+            print(f"Model Confidence:   {conf:.2f}%")
+            print(f"Malignant Risk:     {malignant_pct:.2f}%")
+            print(f"Benign Likelihood:  {benign_pct:.2f}%")
+
             if true_label:
                 is_correct = data["prediction"].lower() == true_label.lower()
                 print(
