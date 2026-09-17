@@ -4,4 +4,5 @@ __pycache__/
 *.pyc
 *.csv
 *.joblib
+*.png
 EOF

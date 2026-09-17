@@ -26,10 +26,10 @@ print(f"Total training instances memorized: {X_train_stored.shape[0]}")
 print(f"Target distribution: Malignant={sum(y_train_stored == 0)} | Benign={sum(y_train_stored == 1)}\n")
 
 # 4. Filter terminal output to just 5 columns to prevent line-wrapping noise
-preview_columns = list(feature_names[:5]) + ['diagnosis']
+preview_columns = list(feature_names[:8]) + ['diagnosis']
 
 print("Terminal Preview (First 10 Features Only):")
-print(df[preview_columns].head(50).round(4))
+print(df[preview_columns].head(100).round(4))
 
 # 5. Export the entire 30-feature dataset to a CSV
 csv_filename = "full_trained_data.csv"
